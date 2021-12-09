@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="concrete_autoencoder",
-    version="0.0.1",
+    version="1.0.1",
     author="Muhammed Fatih Balin",
     author_email="m.f.balin@gmail.com",
     description="An implementation of Concrete Autoencoders",

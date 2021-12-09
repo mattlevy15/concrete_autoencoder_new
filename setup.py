@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="concrete_autoencoder",
+    name="concrete_autoencoder_new",
     version="0.0.1",
     author="Muhammed Fatih Balin",
     author_email="m.f.balin@gmail.com",

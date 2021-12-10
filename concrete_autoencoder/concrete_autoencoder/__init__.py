@@ -1,19 +1,28 @@
-import math
-import tensorflow
+from keras.models import Sequential
+from keras import applications
 from tensorflow.keras import backend as K
+from tensorflow.keras.layers import Layer, Softmax, Input,Dense, Dropout, Input,LeakyReLU
 from tensorflow.keras import Model
-from tensorflow.keras.layers import Layer, Softmax, Input
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.initializers import Constant, glorot_normal
+from tensorflow.keras.initializers import glorot_normal,Constant
 from tensorflow.keras.optimizers import Adam
+import math
+import tensorflow as tf
+
+### define concreteautoencoder
+
 
 class ConcreteSelect(Layer):
     
     def __init__(self, output_dim, start_temp = 10.0, min_temp = 0.1, alpha = 0.99999, **kwargs):
         self.output_dim = output_dim
         self.start_temp = start_temp
-        self.min_temp = K.constant(min_temp)
-        self.alpha = K.constant(alpha)
+        self.min_temp = K.constant(min_temp) ## was keras
+#         with tf.compat.v1.Session() as sess:
+#             print(sess.run(self.min_temp))
+        self.alpha = K.constant(alpha)  ## was keras
+#         with tf.compat.v1.Session() as sess:
+#             print(sess.run(self.alpha))
         super(ConcreteSelect, self).__init__(**kwargs)
         
     def build(self, input_shape):
@@ -46,13 +55,11 @@ class StopperCallback(EarlyStopping):
     
     def on_epoch_begin(self, epoch, logs = None):
         print('mean max of probabilities:', self.get_monitor_value(logs), '- temperature', K.get_value(self.model.get_layer('concrete_select').temp))
-        #print( K.get_value(K.max(K.softmax(self.model.get_layer('concrete_select').logits), axis = -1)))
-        #print(K.get_value(K.max(self.model.get_layer('concrete_select').selections, axis = -1)))
+
     
     def get_monitor_value(self, logs):
         monitor_value = K.get_value(K.mean(K.max(K.softmax(self.model.get_layer('concrete_select').logits), axis = -1)))
         return monitor_value
-
 
 class ConcreteAutoencoderFeatureSelector():
     
@@ -132,4 +139,4 @@ class ConcreteAutoencoderFeatureSelector():
         return self.get_indices() if indices else self.get_mask()
     
     def get_params(self):
-        return self.model
+        return self.model   
